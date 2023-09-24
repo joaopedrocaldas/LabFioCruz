@@ -13,5 +13,5 @@ class IndexRoute {
 		});
 	}
 }
-
 export = IndexRoute;
+
