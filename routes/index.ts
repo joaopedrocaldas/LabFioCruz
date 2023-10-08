@@ -12,6 +12,12 @@ class IndexRoute {
 			layout: "layout"
 		});
 	}
+
+	public static async create(req: app.Request, res: app.Response) {
+		res.render("index/create", {
+			layout: "layout"
+		});
+	}
 }
 export = IndexRoute;
 
