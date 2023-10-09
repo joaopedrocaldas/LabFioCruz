@@ -1,22 +1,58 @@
-<div class="listagem">
-    <h1>Projetos</h1>
-    <form action="submit" class="form-group">
-        <div class="container-fluid">
-            <div class="row">
-                <select name="ufSelect" id="ufSelect" class="form-control col-md-2">
-                    <option value="">UF</option>
-                </select>
-                <select name="cidadeSelect" id="cidadeSelect" class="form-control col-md-2">
-                    <option value="">Cidade</option>
-                </select>
-                <select name="odsSelect" id="odsSelect" class="form-control col-md-2">
-                    <option value="">ODS</option>
-                </select>
-            </div>
-            <div class="row">
-                <input type="text" placeholder="Nome" id="nomeInput" class="form-control col-md-2">
-            </div>
-        </div>
 
-    </form>
-</div>
+<h1>Projetos</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <select name="ufSelect" id="ufSelect" class="form-control col-md-2" onchange="atualizarTela()">
+                <option value="" hidden>UF</option>
+                <% for (let i = 0; i < estados.length; i++) { %>
+					<option value="<%= estados[i].id %>"><%= estados[i].sigla %></option>
+				<% } %>              
+            </select>
+            <select name="cidadeSelect" id="cidadeSelect" class="form-control col-md-2">
+                <option value="" hidden>Cidade</option>
+            </select>
+            <select name="odsSelect" id="odsSelect" class="form-control col-md-2">
+                <option value="" hidden>ODS</option>
+                <% for (let i = 0; i < ods.length; i++) { %>
+					<option value="<%= ods[i].id %>"><%= ods[i].nome %></option>
+				<% } %>
+            </select>
+        </div>
+        <div class="row">
+            <input type="text" placeholder="Nome" id="nomeInput" class="form-control col-md-2">
+        </div>
+    </div> 
+
+
+<div id="listagem">
+</div>    
+
+<script>
+async function atualizarTela(){
+
+    let ufSelect = document.getElementById("ufSelect");
+
+    let responseProjetos = await fetch("/api/projeto/listar?idestado=" + ufSelect.value);
+    let listaProjetos = await responseProjetos.json();
+
+    let divListagem = document.getElementById("listagem");
+
+    listaProjetos.forEach(projeto => {
+        divListagem.innerHTML += 
+        `<h1>${projeto.nome}</h1>
+        <p>Autor(es): ${projeto.autor}</p>
+        <p>Estado: ${projeto.sigla}`
+    });
+
+    let cidadeSelect = document.getElementById("cidadeSelect");
+
+    let responseCidades = await fetch("/api/cidade/listar?idestado=" + ufSelect.value);
+    let listaCidades = await responseCidades.json();
+
+    listaCidades.forEach(cidade => {
+        cidadeSelect.innerHTML += 
+        `<option value="${cidade.id}">${cidade.nome}</option>`
+    })
+    
+}
+</script>

@@ -1,9 +1,15 @@
 ﻿import app = require("teem");
+import Projeto = require("../models/projeto");
+import Estado = require("../models/estado");
+import Ods = require("../models/ods");
+import Cidade = require("../models/cidade");
 
 class IndexRoute {
 	public static async index(req: app.Request, res: app.Response): Promise<void> {
-		res.render("index/index", {
-			layout: "layout"
+		res.render("index", {
+			ods: await Ods.listar(),
+			estados: await Estado.listar(),
+			pagina: "index"
 		});
 	}
 
