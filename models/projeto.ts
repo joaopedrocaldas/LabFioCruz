@@ -8,7 +8,7 @@ interface Projeto {
 }
 
 class Projeto {
-	public static async listar(idestado: number, idcidade: number): Promise<Projeto[]> {
+	public static async listar(idestado: number, idcidade: number, idods: number): Promise<Projeto[]> {
 		let lista: Projeto[] = [];
 
 		let where = "";
@@ -24,6 +24,15 @@ class Projeto {
 			where += (where ? " and " : " where ");
 			where += "p.idcidade = ?";
 			parametros.push(idcidade);
+		}
+
+		//perguntar pro rafa sobre os ()
+		if (idods) {
+			where += (where ? " and " : " where ");
+			where += "(p.resumoods LIKE ? or p.resumoods LIKE ? or p.resumoods LIKE ?)";
+			parametros.push(idods);
+			parametros.push(`%,${idods}`);
+			parametros.push(`%,${idods},%`);
 		}
 
 		await app.sql.connect(async (sql: app.Sql) => {
