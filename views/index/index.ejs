@@ -10,16 +10,14 @@
             </select>
             <select name="odsSelect" id="odsSelect" class="form-control col-md-2">
                 <option value="" hidden>ODS</option>
-                <% for (let i = 0; i < ods.length; i++) { %>
-					<option value="<%= ods[i].id %>"><%= ods[i].nome %></option>
-				<% } %>
             </select>
         </div>
         <div class="row">
             <input type="text" placeholder="Nome" id="nomeInput" class="form-control col-md-2">
         </div>
         <div class="row">
-            <input type="button" value="Filtrar" id="botaoFiltrar" class="form-control col-md-2">
+            <input type="button" value="Filtrar" id="botaoFiltrar" class="form-control col-md-2" onclick="listaProjetos()">
+            <input type="button" value="Limpar Filtro" id="botaoLimpar" class="form-control col-md-2" onclick="limpaFiltros()">
         </div>
     </div> 
 
@@ -31,21 +29,23 @@
     let ufSelect = document.getElementById("ufSelect");
     let cidadeSelect = document.getElementById("cidadeSelect");
     let odsSelect = document.getElementById("odsSelect");
+    let nomeInput = document.getElementById("nomeInput");
 
     let divListagem = document.getElementById("listagem");
 
     listaEstados();
     listaOds();
-    
+    listaProjetos();
 
-    let botaoFiltrar = document.getElementById("botaoFiltrar");
-    botaoFiltrar.onclick = async function(){
+    async function listaProjetos(){
          let responseProjetos = await fetch("/api/projeto/listar?idestado=" + 
          encodeURIComponent(ufSelect.value) + 
          "&idcidade=" + 
          encodeURIComponent(cidadeSelect.value) + 
          "&idods=" + 
-         encodeURIComponent(odsSelect.value));
+         encodeURIComponent(odsSelect.value) +
+         "&nome=" +
+         encodeURIComponent(nomeInput.value));
 
         let listaProjetos = await responseProjetos.json();
 
@@ -59,6 +59,16 @@
         });
 
     }  
+
+    async function limpaFiltros() {
+        ufSelect.value = "", 
+        cidadeSelect.value = "", 
+        odsSelect.value = "";
+        nomeInput.value = "";
+        
+        listaProjetos();
+    }
+
 
    async function listaEstados() {
         
