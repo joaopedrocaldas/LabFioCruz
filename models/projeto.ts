@@ -2,9 +2,51 @@
 
 interface Projeto {
 	id: number;
-	nome: string;
+	idusuario: number;
+	aprovado: number;
+	//banco: BancoTecnologia;
+	resumoods: string;
 	autor: string;
+	telefone: string;
+	email: string;
+	idestado: number;
 	sigla: string;
+	idcidade: number;
+	cidade: string;
+	logradouro: string;
+	numero: string;
+	complemento: string;
+	bairro: string;
+	cep: string;
+	latitude: number;
+	longitude: number;
+	nome: string;
+	exposicao: number;
+	versaoimagem: number;
+	info: string;
+	link: string | null;
+	criacao: string;
+
+	//ods?: ODS[];
+
+	arquivoIcone?: string | null;
+	arquivoImagem?: string | null;
+}
+
+interface ProjetoInfo {
+	publico: string;
+	descricao: string;
+	//macrocategoria: MacroCategoria[];
+	escalonamento: string;
+	local: string;
+	//abrangencia: Abrangencia;
+	parceiros: string;
+	//status: Status;
+	financiamento: string;
+	replicabilidade: string;
+	//divulgacao: Divulgacao[];
+	links: string[];
+	//caracteristica: Caracteristica[];
 }
 
 class Projeto {
@@ -17,8 +59,9 @@ class Projeto {
 
 		await app.sql.connect(async (sql: app.Sql) => {
 			lista = await sql.query(`
-			SELECT p.id, p.nome, p.autor, sigla FROM projeto p
+			SELECT p.id, p.nome, p.autor, e.sigla, c.nome 'cidade'  FROM projeto p
 				INNER JOIN estado e on p.idestado = e.id
+				INNER JOIN cidade c on p.idcidade = c.id
 				${where}`, parametros);
 		});
 

@@ -10,6 +10,7 @@
             </select>
             <select name="odsSelect" id="odsSelect" class="form-control col-md-2">
                 <option value="" hidden>ODS</option>
+                <option value="">todas</option>
             </select>
         </div>
         <div class="row">
@@ -64,6 +65,8 @@
     async function limpaFiltros() {
         ufSelect.value = "", 
         cidadeSelect.value = "", 
+        cidadeSelect.innerHTML = `<option value='' hidden>Cidade</option>
+                                    <option value=''> todas </option>`
         odsSelect.value = "";
         nomeInput.value = "";
         
@@ -86,7 +89,7 @@
         let responseCidades = await fetch("/api/cidade/listar?idestado=" + encodeURIComponent(ufSelect.value));
         let listaCidades = await responseCidades.json();
 
-        cidadeSelect.innerHTML = '<option value="" hidden>Cidade</option>';
+        cidadeSelect.innerHTML += '<option value=""> todas </option>';
 
         listaCidades.forEach(cidade => {
             cidadeSelect.innerHTML += 
