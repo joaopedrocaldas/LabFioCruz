@@ -5,6 +5,10 @@ class ProjetoApiRoute {
     public async listar(req: app.Request, res: app.Response) {
         res.json(await Projeto.listar(parseInt(req.query["idestado"] as string), parseInt(req.query["idcidade"] as string), parseInt(req.query["idods"] as string), req.query["nome"] as string));
     }
+
+    public async obter(req: app.Request, res: app.Response) {
+        res.json(await Projeto.obter(parseInt(req.query["id"] as string)))
+    }
 }
 
 export = ProjetoApiRoute;

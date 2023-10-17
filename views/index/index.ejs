@@ -55,7 +55,8 @@
             divListagem.innerHTML += 
             `<h1>${projeto.nome}</h1>
             <p>Autor(es): ${projeto.autor}</p>
-            <p>Estado: ${projeto.sigla}`
+            <p>Estado: ${projeto.sigla}
+            <input type="button" value="conferir" onclick="conferir(${projeto.id})">`
         });
 
     }  
@@ -102,4 +103,11 @@
             `<option value="${ods.id}">${ods.nome}</option>`
         })
     }  
+
+    async function conferir(id){
+
+        let url = `/projeto?id=` + encodeURIComponent(id);
+
+        window.location.href = url;
+    }
 </script>

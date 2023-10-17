@@ -8,6 +8,25 @@ interface Projeto {
 }
 
 class Projeto {
+
+	public static async obter(id: number): Promise<Projeto> {
+
+		let lista: Projeto[] = [];
+		let where = "where p.id = ?"
+		let parametros = [id];
+
+		await app.sql.connect(async (sql: app.Sql) => {
+			lista = await sql.query(`
+			SELECT p.id, p.nome, p.autor, sigla FROM projeto p
+				INNER JOIN estado e on p.idestado = e.id
+				${where}`, parametros);
+		});
+
+
+
+		return lista[0];
+	}
+
 	public static async listar(idestado: number, idcidade: number, idods: number, nome: string): Promise<Projeto[]> {
 		let lista: Projeto[] = [];
 
@@ -34,11 +53,12 @@ class Projeto {
 			parametros.push(`%,${idods},%`);
 		}
 
-		if (nome != "") {
+		if (nome) {
 			where += (where ? " and " : " where ");
 			where += "p.nome LIKE ?";
 			parametros.push(`%${nome}%`);
 		}
+
 
 		await app.sql.connect(async (sql: app.Sql) => {
 			lista = await sql.query(`

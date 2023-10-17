@@ -9,7 +9,6 @@ class IndexRoute {
 		res.render("index", {
 			ods: await Ods.listar(),
 			estados: await Estado.listar(),
-			pagina: "index"
 		});
 	}
 
@@ -23,6 +22,18 @@ class IndexRoute {
 		res.render("index/create", {
 			layout: "layout"
 		});
+	}
+
+	public static async projeto(req: app.Request, res: app.Response): Promise<void> {
+
+		let idParam = req.query;
+
+		let id = parseInt(idParam.id as string)
+		res.render("index/projeto", {
+			layout: "layout",
+			projeto: await Projeto.obter(id)
+		});
+
 	}
 }
 export = IndexRoute;
