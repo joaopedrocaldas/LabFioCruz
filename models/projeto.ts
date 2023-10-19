@@ -113,6 +113,14 @@ class Projeto {
 
 		return lista;
 	}
+
+	public static async deletar(id: number) {
+		let parametros: any[] = [id]
+		await app.sql.connect(async (sql: app.Sql) => {
+			await sql.query("delete from projeto where id = ?", parametros)
+		});
+
+	}
 }
 
 export = Projeto;
