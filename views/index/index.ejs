@@ -1,16 +1,43 @@
-
-<h1>Projetos</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">FioCruz</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="quemSomos.ejs">Quem Somos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create.ejs">Criar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid">
         <div class="row">
             <select name="ufSelect" id="ufSelect" class="form-control col-md-2" onchange="listaCidades()">
-                <option value="" hidden>UF</option>      
+                <option value="" hidden>UF</option>
             </select>
             <select name="cidadeSelect" id="cidadeSelect" class="form-control col-md-2">
                 <option value="" hidden>Cidade</option>
             </select>
             <select name="odsSelect" id="odsSelect" class="form-control col-md-2">
                 <option value="" hidden>ODS</option>
-                <option value="">todas</option>
             </select>
         </div>
         <div class="row">
@@ -20,97 +47,128 @@
             <input type="button" value="Filtrar" id="botaoFiltrar" class="form-control col-md-2" onclick="listaProjetos()">
             <input type="button" value="Limpar Filtro" id="botaoLimpar" class="form-control col-md-2" onclick="limpaFiltros()">
         </div>
-    </div> 
-
-
-<div id="listagem">
-</div>    
+    </div>
+    <div id="listagem">
+        <!-- Conteúdo da listagem de projetos vai aqui -->
+    </div>
+</body>
+</html>
 
 <script>
     let ufSelect = document.getElementById("ufSelect");
     let cidadeSelect = document.getElementById("cidadeSelect");
     let odsSelect = document.getElementById("odsSelect");
     let nomeInput = document.getElementById("nomeInput");
-
     let divListagem = document.getElementById("listagem");
 
     listaEstados();
     listaOds();
     listaProjetos();
 
-    async function listaProjetos(){
-         let responseProjetos = await fetch("/api/projeto/listar?idestado=" + 
-         encodeURIComponent(ufSelect.value) + 
-         "&idcidade=" + 
-         encodeURIComponent(cidadeSelect.value) + 
-         "&idods=" + 
-         encodeURIComponent(odsSelect.value) +
-         "&nome=" +
-         encodeURIComponent(nomeInput.value));
+    async function listaProjetos() {
+        let responseProjetos = await fetch("/api/projeto/listar?idestado=" +
+            encodeURIComponent(ufSelect.value) +
+            "&idcidade=" +
+            encodeURIComponent(cidadeSelect.value) +
+            "&idods=" +
+            encodeURIComponent(odsSelect.value) +
+            "&nome=" +
+            encodeURIComponent(nomeInput.value));
 
         let listaProjetos = await responseProjetos.json();
 
-        divListagem.innerHTML = ""
+        divListagem.innerHTML = "";
 
         listaProjetos.forEach(projeto => {
-            divListagem.innerHTML += 
-            `<h1>${projeto.nome}</h1>
-            <p>Autor(es): ${projeto.autor}</p>
-            <p>Estado: ${projeto.sigla}
-            <input type="button" value="conferir" onclick="conferir(${projeto.id})">`
+            divListagem.innerHTML +=
+                `<h1>${projeto.nome}</h1>
+                <p>Autor(es): ${projeto.autor}</p>
+                <p>Estado: ${projeto.sigla}`;
         });
-
-    }  
+    }
 
     async function limpaFiltros() {
-        ufSelect.value = "", 
-        cidadeSelect.value = "", 
-        cidadeSelect.innerHTML = `<option value='' hidden>Cidade</option>
-                                    <option value=''> todas </option>`
+        ufSelect.value = "";
+        cidadeSelect.value = "";
         odsSelect.value = "";
         nomeInput.value = "";
-        
+
         listaProjetos();
     }
 
+    ufSelect.addEventListener('change', listaCidades);
 
-   async function listaEstados() {
-        
+    async function listaEstados() {
         let responseEstados = await fetch("/api/estado/listar");
-
         let listaEstados = await responseEstados.json();
 
         listaEstados.forEach(estado => {
-            ufSelect.innerHTML += 
-            `<option value="${estado.id}">${estado.sigla}</option>`
-        })
+            ufSelect.innerHTML +=
+                `<option value="${estado.id}">${estado.sigla}</option>`;
+        });
+
+        listaCidades();
     }
-    async function listaCidades(){
+
+    async function listaCidades() {
         let responseCidades = await fetch("/api/cidade/listar?idestado=" + encodeURIComponent(ufSelect.value));
         let listaCidades = await responseCidades.json();
 
-        cidadeSelect.innerHTML += '<option value=""> todas </option>';
+        cidadeSelect.innerHTML = '<option value="" hidden>Cidade</option>';
+
+        let cidadesOptions = "";
 
         listaCidades.forEach(cidade => {
-            cidadeSelect.innerHTML += 
-            `<option value="${cidade.id}">${cidade.nome}</option>`
-        })
+            cidadesOptions += `<option value="${cidade.id}">${cidade.nome}</option>`;
+        });
 
+        cidadeSelect.innerHTML += cidadesOptions;
     }
-    async function listaOds(){
+
+    async function listaOds() {
         let responseOds = await fetch("/api/ods/listar");
         let listaOds = await responseOds.json();
 
         listaOds.forEach(ods => {
             odsSelect.innerHTML +=
-            `<option value="${ods.id}">${ods.nome}</option>`
-        })
-    }  
-
-    async function conferir(id){
-
-        let url = `/projeto?id=` + encodeURIComponent(id);
-
-        window.location.href = url;
+                `<option value="${ods.id}">${ods.nome}</option>`;
+        });
     }
 </script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+    .container-fluid {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+    }
+    .row {
+        margin-bottom: 10px;
+    }
+    select, input[type="text"], input[type="button"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+    select {
+        width: auto;
+    }
+    input[type="button"] {
+        background-color: #007BFF;
+        color: #fff;
+        cursor: pointer;
+    }
+    input[type="button"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+
