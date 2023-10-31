@@ -1,5 +1,72 @@
 <div class="form-group">
     <div class="form-group">
-        
+        <select name="" id="bancoTecSelect" class="form-control col-md-3">
+            <option value="null">Banco de tecnologias</option>
+            
+        </select>
+        <label for="autorInput" class="">Autor:</label>
+        <input type="text" class="form-control col-md-3" id="autorInput">
+
+        <label for="telefoneInput" class="">Telefone de contato:</label>
+        <input type="text" class="form-control col-md-3" id="telefoneInput">
+
+        <label for="linkBancoInput" class="">Link do banco de tecnologias</label>
+        <input type="text" class="form-control" id="linkBancoInput">
+
+        <label for="emailInput" class="">Email de contato:</label>
+        <input type="email" class="form-control" id="emailInput">
+
+        <label for="logradouroInput" class="">Logradouro:</label>
+        <input type="text" class="form-control" id="logradouroInput">
+
+
+        <label for="logradouroInput" class="">ODS's relacionadas ao projeto:    </label>
+        <div class="row">
+           <div class="col-md-6">
+                <% ods.slice(0, Math.ceil(ods.length / 2)).forEach(ods => { %>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="<%= ods.id %>" id="odsCheckbox<%= ods.id %>" name="odsCheckbox">
+                        <label class="form-check-label" for="odsCheckbox<%= ods.id %>">
+                            <%= ods.nome %>
+                        </label>
+                    </div>
+                <% }); %>
+            </div>
+            <div class="col-md-6">
+                <% ods.slice(Math.ceil(ods.length / 2)).forEach(ods => { %>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="<%= ods.id %>" id="odsCheckbox<%= ods.id %>" name="odsCheckbox">
+                        <label class="form-check-label" for="odsCheckbox<%= ods.id %>">
+                            <%= ods.nome %>
+                        </label>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
     </div>
+
+    <input type="button" value="Criar" class="btn btn-success" onclick="criar()" id="botaoCriar">
 </div>
+
+<script>
+    async function criar(){
+        // Obtém o valor dos inputs
+        var autor = $('#autorInput').val();
+        var telefone = $('#telefoneInput').val();
+        var linkBanco = $('#linkBancoInput').val();
+        var email = $('#emailInput').val();
+        var logradouro = $('#logradouroInput').val();
+
+        // Obtém os valores dos checkboxes marcados
+       var checkboxesMarcados = $('input[type="checkbox"]:checked').map(function() {
+            return $(this).val();
+        }).get().join(', ');
+
+        console.log('Autor:', autor);
+        console.log('Telefone:', telefone);
+        console.log('Link do Banco de Tecnologias:', linkBanco);
+        console.log('Email de Contato:', email);
+        console.log('Logradouro:', logradouro);
+        console.log('ODSs Marcadas:', checkboxesMarcados);
+    };
+</script>

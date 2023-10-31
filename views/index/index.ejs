@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projetos</title>
-</head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -19,10 +11,10 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="quemSomos.ejs">Quem Somos</a>
+                        <a class="nav-link" href="/quemSomos">Quem Somos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="create.ejs">Criar</a>
+                        <a class="nav-link" href="/create">Criar</a>
                     </li>
                 </ul>
             </div>
@@ -83,7 +75,8 @@
             divListagem.innerHTML +=
                 `<h1>${projeto.nome}</h1>
                 <p>Autor(es): ${projeto.autor}</p>
-                <p>Estado: ${projeto.sigla}`;
+                <p>Estado: ${projeto.sigla}
+                 <input type="button" value="conferir" onclick="conferir(${projeto.id})"/>`
         });
     }
 
@@ -133,6 +126,13 @@
             odsSelect.innerHTML +=
                 `<option value="${ods.id}">${ods.nome}</option>`;
         });
+    }
+
+     async function conferir(id){
+
+        let url = `/projeto?id=` + encodeURIComponent(id);
+
+        window.location.href = url;
     }
 </script>
 

@@ -9,6 +9,7 @@ class IndexRoute {
 		res.render("index", {
 			ods: await Ods.listar(),
 			estados: await Estado.listar(),
+			layout: "layout"
 		});
 	}
 
@@ -20,6 +21,7 @@ class IndexRoute {
 
 	public static async create(req: app.Request, res: app.Response) {
 		res.render("index/create", {
+			ods: await Ods.listar(),
 			layout: "layout"
 		});
 	}
