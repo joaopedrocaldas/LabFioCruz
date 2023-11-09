@@ -3,6 +3,7 @@ import Projeto = require("../models/projeto");
 import Estado = require("../models/estado");
 import Ods = require("../models/ods");
 import Cidade = require("../models/cidade");
+import bancosTecnologia = require("../models/bancoTecnologia");
 
 class IndexRoute {
 	public static async index(req: app.Request, res: app.Response): Promise<void> {
@@ -22,6 +23,7 @@ class IndexRoute {
 	public static async create(req: app.Request, res: app.Response) {
 		res.render("index/create", {
 			ods: await Ods.listar(),
+			bancosTecnologia: bancosTecnologia.lista,
 			layout: "layout"
 		});
 	}
